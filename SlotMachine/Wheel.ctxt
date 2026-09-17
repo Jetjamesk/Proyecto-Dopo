@@ -1,0 +1,30 @@
+#BlueJ class context
+#Mon Sep 14 18:13:48 COT 2026
+comment0.target=Wheel
+comment1.target=Wheel()
+comment10.target=int size()
+comment11.target=void makeVisible()
+comment12.target=void makeInvisible()
+comment13.params=pos max
+comment13.target=int posicitionArrayList(int, int)
+comment14.params=x
+comment14.target=void reposition(int)
+comment15.params=on
+comment15.target=void setHighlighted(boolean)
+comment16.target=void lock()
+comment17.target=void unlock()
+comment18.target=boolean isLocked()
+comment2.params=pos color
+comment2.target=void addSymbol(int, java.lang.String)
+comment3.params=symbol
+comment3.target=void delSymbol(java.lang.String)
+comment4.params=symbol
+comment4.target=void placeSymbol(java.lang.String)
+comment5.target=void spin()
+comment6.params=rng
+comment6.target=boolean spin(java.util.Random)
+comment7.params=steps
+comment7.target=void spin(int)
+comment8.target=java.lang.String[] allSymbols()
+comment9.target=java.lang.String currentSymbol()
+numComments=19
