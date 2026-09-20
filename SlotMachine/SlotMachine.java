@@ -106,8 +106,8 @@ public class SlotMachine
     }
 
     /**
-     * Buscar y eliminar un simbolo especifico de cada rueda
-     * @param  symbol la figura (Triangulo,Rectangulo y Circulo)
+     * Buscar y eliminar un simbolo de cada rueda
+     * @param  symbol la figura 
      * @return void
      */
     public void delSymbol(String symbol){
@@ -126,8 +126,6 @@ public class SlotMachine
      * @param wheel, symbol la rueda que queremos ver y el simbolo que buscamos 
      * @return void
      */
-    // Fuerza a una rueda específica a mostrar un símbolo de color determinado.
-    // placeSymbol: Nombre | wheel: Parámetro de rueda | symbol: Parámetro de color visible.
     public void placeSymbol(int wheel, String symbol)
     {
         if (wheels.size() == 0)
@@ -265,20 +263,7 @@ public class SlotMachine
         return true;
     }
     
-    /**
-     * Indica si una rueda específica está actualmente fijada (locked).
-     *
-     * @param wheel posición de la rueda a consultar
-     * @return true si la rueda existe y está fijada, false en caso contrario
-     */
-    public boolean isLocked(int wheel){
-        if (wheels.size() == 0){
-            return false;
-        }
-        int index = posicitionArrayList(wheel, wheels.size());
-        return wheels.get(index - 1).isLocked();
-    }
-
+    
     /**
      * Muestra visualmente la interfaz de la máquina y sus ruedas.
      * 
@@ -433,28 +418,12 @@ public class SlotMachine
             for (int i = 0; i < totalSteps; i++){
                 target.spin(direction);
                 redraw();
-                pause(STEP_DELAY_MS);
             }
         } else {
             target.spin(steps);
         }
         ok = true;
         redraw();
-    }
-
-    /**
-     * Pausa breve usada para animar, paso a paso, el giro de una rueda cuando la
-     * máquina es visible.
-     *
-     * @param millis milisegundos a esperar
-     * @return void
-     */
-    private void pause(int millis){
-        try{
-            Thread.sleep(millis);
-        } catch (InterruptedException e){
-            Thread.currentThread().interrupt();
-        }
     }
 
     private void redraw(){
