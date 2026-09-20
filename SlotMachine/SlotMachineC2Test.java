@@ -3,18 +3,11 @@ import org.junit.Before;
 import static org.junit.Assert.*;
 
 /**
- * Pruebas de unidad del Ciclo 2 (Refactoring y Extensión) de SlotMachine.
- * Cubre los requisitos funcionales 9 a 12:
- *   9.  Intercambiar dos ruedas          -> swap(int, int)
- *   10. Fijar y soltar una rueda         -> lock(int) / unlock(int)
- *   11. Rotar una rueda un número de pasos -> spin(int, int)
- *   12. Dejar la máquina en una configuración dada -> spin(String[])
+ * Pruebas del Ciclo 2 de SlotMachine.
+ * Todas las pruebas se ejecutan en modo invisible
  *
- * Todas las pruebas se ejecutan en modo invisible: nunca se invoca
- * makeVisible(), por lo tanto la simulación no despliega el canvas.
- *
- * @author (Iniciales según convención del curso)
- * @version (Ciclo 2 - 2026-2)
+ * @author (Juan Andrés Rojas Molina)
+ * @version (Ciclo 2)
  */
 public class SlotMachineC2Test
 {
@@ -42,29 +35,26 @@ public class SlotMachineC2Test
         machine.addSymbol(1, "green");
         machine.addSymbol(2, "red");
 
-        // Configuración de partida conocida: [blue, blue, red]
         machine.placeSymbol(1, "blue");
         machine.placeSymbol(2, "blue");
         machine.placeSymbol(3, "red");
     }
 
-    // ---------- Requisito 9: swap ----------
-
-    /** swap QUÉ DEBERÍA HACER: intercambiar los símbolos visibles de dos ruedas. */
+    /** swap Deberia intercambiar los símbolos visibles de dos ruedas. */
     @Test
     public void swapShouldExchangeVisibleSymbolsOfTwoWheels()
     {
-        String[] before = machine.configuration(); // [blue, blue, red]
+        String[] before = machine.configuration(); 
         machine.swap(1, 3);
         String[] after = machine.configuration();
 
         assertTrue(machine.ok());
         assertEquals(before[0], after[2]);
         assertEquals(before[2], after[0]);
-        assertEquals(before[1], after[1]); // la rueda no involucrada no cambia
+        assertEquals(before[1], after[1]); 
     }
 
-    /** swap QUÉ NO DEBERÍA HACER: fallar si hay menos de dos ruedas en la máquina. */
+    /** swap No deberia hacer que fallar si hay menos de dos ruedas en la máquina. */
     @Test
     public void swapShouldFailWhenFewerThanTwoWheelsExist()
     {
@@ -77,17 +67,16 @@ public class SlotMachineC2Test
         assertFalse(oneWheel.ok());
     }
 
-    /** swap QUÉ NO DEBERÍA HACER: posiciones fuera de rango deben ajustarse, no lanzar excepción. */
+    /** swap No deberia hacer que posiciones fuera de rango deben ajustarse, no lanzar excepción. */
     @Test
     public void swapShouldClampOutOfRangePositionsInsteadOfFailing()
     {
-        machine.swap(-5, 999); // debe interpretarse como swap(1, 3)
+        machine.swap(-5, 999); 
         assertTrue(machine.ok());
     }
 
-    // ---------- Requisito 10: lock / unlock ----------
 
-    /** lock QUÉ DEBERÍA HACER: impedir que la rueda cambie al girar todas las ruedas. */
+    /** lock Deberia hacer impedir que la rueda cambie al girar todas las ruedas. */
     @Test
     public void lockShouldKeepWheelUnchangedDuringSpinAll()
     {
@@ -102,7 +91,7 @@ public class SlotMachineC2Test
         assertEquals(beforeLock, machine.configuration()[0]);
     }
 
-    /** lock QUÉ NO DEBERÍA HACER: permitir que spin(wheel, steps) mueva una rueda fijada. */
+    /** lock No deberia permitir que spin(wheel, steps) mueva una rueda fijada. */
     @Test
     public void spinWithStepsShouldFailOnLockedWheel()
     {
@@ -115,7 +104,7 @@ public class SlotMachineC2Test
         assertEquals(beforeLock, machine.configuration()[1]);
     }
 
-    /** unlock QUÉ DEBERÍA HACER: permitir que la rueda vuelva a girar normalmente. */
+    /** unlock Deberia permitir que la rueda vuelva a girar normalmente. */
     @Test
     public void unlockShouldAllowWheelToSpinAgain()
     {
@@ -127,7 +116,7 @@ public class SlotMachineC2Test
         assertTrue(machine.ok());
     }
 
-    /** lock/unlock QUÉ NO DEBERÍA HACER: afectar máquinas sin ruedas. */
+    /** lock/unlock No deberia afectar máquinas sin ruedas. */
     @Test
     public void lockShouldFailWhenMachineHasNoWheels()
     {
@@ -136,33 +125,30 @@ public class SlotMachineC2Test
         assertFalse(empty.ok());
     }
 
-    // ---------- Requisito 11: spin(wheel, steps) ----------
 
-    /** spin(wheel,steps) QUÉ DEBERÍA HACER: rotar la rueda exactamente esos pasos (circular). */
+    /** spin(wheel,steps) Deberia rotar la rueda exactamente esos pasos (circular). */
     @Test
     public void spinWithStepsShouldRotateWheelByGivenSteps()
     {
-        // Rueda 1: [red, blue, green], posición actual = blue (índice 1)
-        machine.spin(1, 1); // avanza 1 paso -> green
+        machine.spin(1, 1); 
         assertTrue(machine.ok());
         assertEquals("green", machine.configuration()[0]);
 
-        machine.spin(1, 2); // desde green (índice 2), +2 -> índice (2+2)%3 = 1 -> blue
+        machine.spin(1, 2); 
         assertTrue(machine.ok());
         assertEquals("blue", machine.configuration()[0]);
     }
 
-    /** spin(wheel,steps) QUÉ DEBERÍA HACER: aceptar pasos negativos (rotación inversa). */
+    /** spin(wheel,steps) Deberia aceptar pasos negativos (rotación inversa). */
     @Test
     public void spinWithNegativeStepsShouldRotateBackwards()
     {
-        // desde blue (índice 1), -1 -> índice 0 -> red
         machine.spin(1, -1);
         assertTrue(machine.ok());
         assertEquals("red", machine.configuration()[0]);
     }
 
-    /** spin(wheel,steps) QUÉ NO DEBERÍA HACER: fallar si la máquina no tiene ruedas. */
+    /** spin(wheel,steps) No deberia fallar si la máquina no tiene ruedas. */
     @Test
     public void spinWithStepsShouldFailWhenMachineHasNoWheels()
     {
@@ -171,9 +157,8 @@ public class SlotMachineC2Test
         assertFalse(empty.ok());
     }
 
-    // ---------- Requisito 12: spin(String[]) — configuración dada ----------
 
-    /** spin(config) QUÉ DEBERÍA HACER: dejar cada rueda mostrando el símbolo indicado. */
+    /** spin(config) debe dejar cada rueda mostrando el símbolo indicado. */
     @Test
     public void spinWithConfigurationShouldSetEachWheelToGivenSymbol()
     {
@@ -183,7 +168,7 @@ public class SlotMachineC2Test
         assertArrayEquals(new String[]{"red", "blue", "green"}, machine.configuration());
     }
 
-    /** spin(config) QUÉ DEBERÍA HACER: no modificar las ruedas fijadas. */
+    /** spin(config) Debe hacer que no deje modificar las ruedas fijadas. */
     @Test
     public void spinWithConfigurationShouldNotChangeLockedWheels()
     {
@@ -198,19 +183,19 @@ public class SlotMachineC2Test
         assertEquals("green", machine.configuration()[2]);
     }
 
-    /** spin(config) QUÉ NO DEBERÍA HACER: aceptar un arreglo de tamaño distinto al número de ruedas. */
+    /** spin(config) no deberia aceptar un arreglo de tamaño distinto al número de ruedas. */
     @Test
     public void spinWithConfigurationShouldFailWhenArrayLengthDoesNotMatchWheelCount()
     {
         String[] before = machine.configuration();
 
-        machine.spin(new String[]{"red", "blue"}); // sólo 2, la máquina tiene 3 ruedas
+        machine.spin(new String[]{"red", "blue"}); 
 
         assertFalse(machine.ok());
-        assertArrayEquals(before, machine.configuration()); // no debe alterar nada
+        assertArrayEquals(before, machine.configuration()); 
     }
 
-    /** spin(config) QUÉ NO DEBERÍA HACER: fallar ante un arreglo nulo. */
+    /** spin(config)no deberia fallar ante un arreglo nulo. */
     @Test
     public void spinWithConfigurationShouldFailWhenArrayIsNull()
     {
