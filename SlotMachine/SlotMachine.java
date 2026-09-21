@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 import java.util.Random;
+import java.awt.Color; // Use I.A como recomendacion para la solucion del problema 
+import java.util.Collections; // Use I.A como recomendacion para la solucion del problema 
+
 /**
  * Write a description of class SlotMachine here.
  *
@@ -30,6 +33,44 @@ public class SlotMachine
         activeWheel = null;
         random = new Random();
     }
+    
+    /**
+     * Crear the slot machine with an N wheels and sysmbols 
+     * @param n numebres of wheels and symbols of the slot machine
+     */
+        public SlotMachine(int n){
+        //Use I.A como recomendacion para la solucion del problema 
+        this();
+        if (n <= 0){
+            ok = false;
+            return;
+        }
+        ArrayList<String> colors = new ArrayList<String>();
+        float firstHue = random.nextFloat();
+        for (int i = 0; colors.size() < n; i++){
+            int rgb = Color.HSBtoRGB((firstHue + (float) i / n) % 1.0f,
+                                     0.6f + 0.4f * random.nextFloat(),
+                                     0.7f + 0.3f * random.nextFloat());
+            String color = String.format("#%06X", rgb & 0xFFFFFF);
+            if (!colors.contains(color)){
+                colors.add(color);
+            }
+        }
+        for (int i = 0; i < n; i++){
+            Wheel wheel = new Wheel();
+            Collections.shuffle(colors, random);
+            for (int j = 0; j < n; j++){
+                wheel.addSymbol(wheel.size() + 1, colors.get(j));
+            }
+            wheels.add(wheel);
+        }
+        activeWheel = wheels.get(n - 1);
+        ok = true;
+        if (n > 1 && isJackpot()){
+            wheels.get(0).spin(1);
+        }
+    }
+
     
     /**
      * Añadir una reuda en la maquina 
