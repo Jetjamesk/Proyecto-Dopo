@@ -2,11 +2,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Casos de prueba compartidos del Ciclo 3. Solo usan la interfaz publica y lo
- * que dice el enunciado (SlotMachine(n), spin, distinctSymbols, solve), para
- * que puedan ejecutarse contra la implementacion de otro grupo. Cada uno
- * combina la solucion o el constructor del ciclo 3 con metodos de ciclos
- * anteriores. Todas las pruebas se ejecutan en modo invisible.
+ * Test Cases for Cycle 3.
  *
  * @author (Juan Andrés Rojas Molina)
  * @version (Ciclo 3)
@@ -14,9 +10,9 @@ import static org.junit.Assert.*;
 public class SlotMachineContestCTest
 {
     /**
-     * Caso de prueba: combina solve() con el constructor SlotMachine(n).
-     * Para varios tamaños solve devuelve acciones validas {rueda, pasos} y no
-     * pasa el limite de 10000 acciones de la maratón.
+     * Test case: Combine `solve()` with the `SlotMachine(n)` constructor.
+     * For various sizes, `solve` returns valid actions {wheel, steps} and does not
+     * exceed the marathon's limit of 10,000 actions.
      */
     @Test
     public void accordingXxYyShouldSolveWithValidActionsInsideTheLimit()
@@ -35,12 +31,12 @@ public class SlotMachineContestCTest
     }
 
     /**
-     * Caso de prueba: combina SlotMachine(n) con swap(), lock(), unlock(),
-     * spin(wheel, steps), spin(setSymbols), symbols(), configuration() y
+     * Test case: Combine SlotMachine(n) with swap(), lock(), unlock(),
+     * spin(wheel, steps), spin(setSymbols), symbols(), configuration(), and
      * distinctSymbols().
-     * Intercambiar ruedas no cambia cuantos simbolos se ven; una rueda fijada
-     * no gira; y como cada rueda tiene los n simbolos, se puede llevar toda la
-     * maquina a un jackpot con un solo color.
+     * Swapping wheels does not change the number of symbols displayed; a locked wheel
+     * does not spin; and since each wheel has n symbols, the entire
+     * machine can be set to a jackpot with a single color.
      */
     @Test
     public void accordingXxYyShouldKeepC2BehaviorOnAMachineOfNWheelsAndNSymbols()
