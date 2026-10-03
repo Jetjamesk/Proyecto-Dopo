@@ -5,8 +5,8 @@ import java.util.ArrayList;
  * @author (Juan Andrés Rojas)
  * @version (Ciclo 3 )
  */
-public class SlotMachineContest
-{
+public class SlotMachineContest extends SlotMachine{
+    
     /** Maximo de acciones (giros) permitido por la maratón. */
     public static final int MAX_ACTIONS = 10000;
     /**

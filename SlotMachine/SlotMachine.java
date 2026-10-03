@@ -46,6 +46,10 @@ public class SlotMachine
             return;
         }
         ArrayList<String> colors = new ArrayList<String>();
+        String[] palette = {"red", "blue", "yellow", "green", "magenta", "white", "black"};
+        for (int i = 0; i < palette.length && colors.size() < n; i++){
+            colors.add(palette[i]);
+        }
         float firstHue = random.nextFloat();
         for (int i = 0; colors.size() < n; i++){
             int rgb = Color.HSBtoRGB((firstHue + (float) i / n) % 1.0f,
@@ -56,12 +60,13 @@ public class SlotMachine
                 colors.add(color);
             }
         }
+        Collections.shuffle(colors, random);
         for (int i = 0; i < n; i++){
             Wheel wheel = new Wheel();
-            Collections.shuffle(colors, random);
             for (int j = 0; j < n; j++){
                 wheel.addSymbol(wheel.size() + 1, colors.get(j));
             }
+            wheel.spin(random.nextInt(n));
             wheels.add(wheel);
         }
         activeWheel = wheels.get(n - 1);
