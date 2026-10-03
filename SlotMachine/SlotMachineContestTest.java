@@ -15,8 +15,8 @@ import java.util.HashSet;
 public class SlotMachineContestTest
 {
     /**
-     * Lee el atributo privado visible de la maquina (SlotMachine no tiene un
-     * metodo para consultarlo).
+     * Reads the private "visible" attribute of the machine
+     * (SlotMachine has no method to query it).
      */
     private boolean isVisible(SlotMachine machine) throws Exception
     {
@@ -24,8 +24,9 @@ public class SlotMachineContestTest
         field.setAccessible(true);
         return field.getBoolean(machine);
     }
-
-    /** Colores de la rueda w (la lleva a la posicion 1 con swap y la deja igual). */
+    
+    
+    /** Returns the colors of wheel w (swaps it to position 1 and back). */
     private String[] wheelSymbols(SlotMachine machine, int w)
     {
         machine.swap(1, w);
@@ -33,18 +34,14 @@ public class SlotMachineContestTest
         machine.swap(1, w);
         return symbols;
     }
-
+    
     // ---------------------------------------------------------------- SlotMachine(n)
-    // Nota: SlotMachine solo tiene el constructor SlotMachine(int n), que crea
-    // n ruedas con n simbolos cada una (no existe un SlotMachine(n, y) con
-    // cantidades independientes de ruedas y simbolos). Las pruebas de esta
-    // seccion antes asumian ese segundo constructor; se dejaron como pruebas
-    // equivalentes usando un solo tamaño n, y con "n grande" para cubrir el
-    // caso de muchos simbolos.
-
+    // Note: SlotMachine only has the constructor SlotMachine(int n), which creates
+    // n wheels with n symbols each. These tests use a single size n.
+    
     /**
-     * Caso de prueba: los simbolos de una rueda son de colores diferentes y
-     * todas las ruedas tienen los mismos colores.
+     * Test case: the symbols of a wheel have different colors,
+     * and all wheels have the same colors.
      */
     @Test
     public void constructorWithNShouldUseDifferentColors()
@@ -67,10 +64,11 @@ public class SlotMachineContestTest
             assertEquals("rueda " + wheel, first, colors);
         }
     }
-
+    
+    
     /**
-     * Caso de prueba: los colores son aleatorios (dos maquinas no tienen los
-     * mismos colores) y con n grande siguen siendo todos diferentes.
+     * Test case: colors are random (two machines differ), and
+     * with a large n they are all still different.
      */
     @Test
     public void constructorWithNShouldUseRandomColors()
@@ -81,7 +79,7 @@ public class SlotMachineContestTest
             firstColors.add(new SlotMachine(2).symbols()[0]);
         }
         assertTrue("los colores deben variar", firstColors.size() > 1);
-
+    
         int big = 100;
         HashSet<String> many = new HashSet<String>();
         for (String color : new SlotMachine(big).symbols())
@@ -90,9 +88,10 @@ public class SlotMachineContestTest
         }
         assertEquals(big, many.size());
     }
-
+    
+    
     /**
-     * Caso de prueba: si n no es positivo no se crean ruedas y ok() es false.
+     * Test case: if n is not positive, no wheels are created and ok() is false.
      */
     @Test
     public void constructorWithNShouldFailWhenNIsNotPositive()
@@ -104,9 +103,10 @@ public class SlotMachineContestTest
             assertEquals(0, machine.configuration().length);
         }
     }
-
+    
+    
     /**
-     * Caso de prueba: SlotMachine(n) crea n ruedas con n simbolos cada una.
+     * Test case: SlotMachine(n) creates n wheels with n symbols each.
      */
     @Test
     public void constructorWithNShouldCreateNWheelsWithNSymbols()
@@ -119,10 +119,10 @@ public class SlotMachineContestTest
             assertEquals(n, machine.symbols().length);
         }
     }
-
+    
+    
     /**
-     * Caso de prueba: cada rueda tiene los mismos n simbolos, de colores
-     * diferentes, en su propio orden.
+     * Test case: every wheel has the same n different colors, in its own order.
      */
     @Test
     public void constructorWithNShouldGiveEveryWheelTheSameNDifferentColors()
@@ -145,9 +145,10 @@ public class SlotMachineContestTest
             assertEquals("rueda " + wheel, first, colors);
         }
     }
-
+    
+    
     /**
-     * Caso de prueba: la maquina nunca empieza en jackpot (n >= 2).
+     * Test case: the machine never starts in jackpot (n >= 2).
      */
     @Test
     public void constructorWithNShouldNeverStartInJackpot()
@@ -160,10 +161,11 @@ public class SlotMachineContestTest
             }
         }
     }
-
+    
+    
     /**
-     * Caso de prueba: la maquina de una sola rueda y un solo simbolo ya esta
-     * en jackpot; y con n no positivo no se crea nada.
+     * Test case: a machine with one wheel and one symbol is already a jackpot,
+     * and a non-positive n creates nothing.
      */
     @Test
     public void constructorWithNShouldHandleTheLimits()
@@ -173,9 +175,10 @@ public class SlotMachineContestTest
         assertFalse(empty.ok());
         assertEquals(0, empty.configuration().length);
     }
-
+    
+    
     /**
-     * Caso de prueba: la maquina se crea invisible.
+     * Test case: the machine is created invisible.
      */
     @Test
     public void constructorsShouldLeaveMachineInvisible() throws Exception
@@ -183,14 +186,13 @@ public class SlotMachineContestTest
         assertFalse(isVisible(new SlotMachine(4)));
         assertFalse(isVisible(new SlotMachine(3)));
     }
-
+    
     // ---------------------------------------------------------------- distinctSymbols()
-
+    
     /**
-     * Caso de prueba: distinctSymbols() cuenta todos los simbolos distintos
-     * que existen en las ruedas de la maquina, no solo el que esta visible
-     * en cada una (spin/placeSymbol solo cambian cual se ve, no la lista de
-     * simbolos de la rueda).
+     * Test case: distinctSymbols() counts all different symbols in the machine,
+     * not only the visible ones. Spinning does not change the total;
+     * adding a new symbol does.
      */
     @Test
     public void distinctSymbolsShouldCountAllSymbolsInTheMachine()
@@ -205,20 +207,21 @@ public class SlotMachineContestTest
         }
         // las 3 ruedas comparten los mismos 3 simbolos
         assertEquals(3, machine.distinctSymbols());
-
+    
         // cambiar cual simbolo esta visible no cambia el total
         machine.placeSymbol(1, "red");
         machine.placeSymbol(2, "blue");
         machine.placeSymbol(3, "red");
         assertEquals(3, machine.distinctSymbols());
-
+    
         // agregar un simbolo nuevo (a la rueda activa) si aumenta el total
         machine.addSymbol(4, "yellow");
         assertEquals(4, machine.distinctSymbols());
     }
-
+    
+    
     /**
-     * Caso de prueba: sin ruedas distinctSymbols() falla (ok() false, 0).
+     * Test case: without wheels, distinctSymbols() fails (returns 0, ok() is false).
      */
     @Test
     public void distinctSymbolsShouldFailWhenMachineHasNoWheels()
@@ -227,14 +230,12 @@ public class SlotMachineContestTest
         assertEquals(0, machine.distinctSymbols());
         assertFalse(machine.ok());
     }
-
-
+    
+    
     /**
-     * Caso de prueba: solve gana (jackpot) para tamaños pequeños y medianos.
-     * Nota: distinctSymbols() no sirve para verificar el jackpot porque
-     * cuenta TODOS los simbolos que existen en las ruedas (no solo el
-     * visible), y ese numero no cambia al girar; el jackpot se verifica con
-     * isJackpot(), que sí mira los simbolos visibles.
+     * Test case: solve reaches a jackpot for small and medium sizes.
+     * The jackpot is checked with isJackpot(), since distinctSymbols()
+     * counts all symbols and does not change when spinning.
      */
     @Test
     public void solveShouldReachJackpotForSmallAndMediumSizes()
@@ -248,9 +249,10 @@ public class SlotMachineContestTest
             }
         }
     }
-
+    
+    
     /**
-     * Caso de prueba: solve gana con el tamaño maximo de la maratón (n = 50).
+     * Test case: solve reaches a jackpot with the maximum size (n = 50).
      */
     @Test
     public void solveShouldReachJackpotForMaximumSize()
@@ -261,10 +263,10 @@ public class SlotMachineContestTest
             assertTrue(SlotMachineContest.machine.isJackpot());
         }
     }
-
+    
+    
     /**
-     * Caso de prueba: solve no pasa el limite de acciones de la maratón y
-     * cumple la cota 2n^2 + 1.
+     * Test case: solve stays within the action limit and the 2n^2 + 1 bound.
      */
     @Test
     public void solveShouldNotExceedTheActionLimit()
@@ -276,10 +278,10 @@ public class SlotMachineContestTest
             assertTrue("n=" + n, actions.length <= 2 * n * n + 1);
         }
     }
-
+    
+    
     /**
-     * Caso de prueba: cada accion es {rueda, pasos} con rueda en 1..n y
-     * pasos en 1..n-1.
+     * Test case: each action is {wheel, steps} with wheel in 1..n and steps in 1..n-1.
      */
     @Test
     public void solveShouldReturnValidActions()
@@ -295,10 +297,10 @@ public class SlotMachineContestTest
         }
     }
 
+    
     /**
-     * Caso de prueba: las acciones devueltas son la solucion. Deshaciendolas
-     * la maquina vuelve a su configuracion inicial (que no es un jackpot) y
-     * repitiendolas gana.
+     * Test case: undoing the actions returns the machine to its initial
+     * state (no jackpot), and repeating them reaches a jackpot.
      */
     @Test
     public void solveActionsShouldTakeTheInitialMachineToJackpot()
@@ -320,9 +322,10 @@ public class SlotMachineContestTest
             assertTrue("repetir las acciones gana", machine.isJackpot());
         }
     }
-
+    
+    
     /**
-     * Caso de prueba: durante solve la maquina permanece invisible.
+     * Test case: the machine stays invisible during solve.
      */
     @Test
     public void solveShouldKeepMachineInvisible() throws Exception
@@ -330,9 +333,10 @@ public class SlotMachineContestTest
         SlotMachineContest.solve(5);
         assertFalse(isVisible(SlotMachineContest.machine));
     }
-
+    
+    
     /**
-     * Caso de prueba: si n es menor que 2 no hay nada que resolver (sin acciones).
+     * Test case: if n is less than 2, there is nothing to solve (no actions).
      */
     @Test
     public void solveShouldReturnNoActionsWhenThereIsNothingToSolve()
@@ -342,12 +346,11 @@ public class SlotMachineContestTest
             assertEquals("n=" + n, 0, SlotMachineContest.solve(n).length);
         }
     }
-
+    
     // ---------------------------------------------------------------- simulate(n)
-
+    
     /**
-     * Caso de prueba: simulate no hace nada si n esta fuera de los limites
-     * (no se resuelve ni se abre ventana).
+     * Test case: simulate does nothing if n is outside the limits.
      */
     @Test
     public void simulateShouldDoNothingWhenNIsOutsideTheLimits()
@@ -357,10 +360,11 @@ public class SlotMachineContestTest
         SlotMachineContest.simulate(SlotMachineContest.MAX_SIMULATION_SIZE + 1);
         assertNull(SlotMachineContest.machine);
     }
-
+    
+    
     /**
-     * Caso de prueba: despues de simulate la maquina esta visible y en
-     * jackpot. Necesita pantalla: si no hay, se omite.
+     * Test case: after simulate, the machine is visible and in jackpot.
+     * It needs a display, so it is skipped if there is none.
      */
     @Test
     public void simulateShouldEndWithVisibleMachineInJackpot() throws Exception

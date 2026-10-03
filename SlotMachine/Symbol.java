@@ -12,8 +12,8 @@ public class Symbol
 
     
     /**
-     * Constructor - Crea un símbolo con color y figura por defecto (círculo)
-     * @param color El color del símbolo
+     * Constructor for objects of class Symbol
+     * Create a symbol
      */
     public Symbol(String color)
     {
@@ -22,25 +22,29 @@ public class Symbol
         shape.changeColor(color);
     }
         
+    
     /**
-    * Devuelve el color del símbolo
-    * @return El color como String
-    */
+     * Returns the color of the symbol.
+     *
+     * @return the color as a String
+     */
     public String getColor()
     {
         return color;
     }
     
+    
     /**
-     * Hace visible la figura geométrica
+     * Makes the symbol visible.
      */
     public void makeVisible()
     {
         shape.makeVisible();
     }
     
+    
     /**
-     * Hace invisible la figura geométrica
+     * Makes the symbol invisible.
      */
     public void makeInvisible()
     {
@@ -48,17 +52,24 @@ public class Symbol
     }
     
     
+    /**
+     * Highlights or unhighlights the symbol by changing the size of its shape.
+     *
+     * @param on true to enlarge the shape (45), false to return it to its normal size (30)
+     */
     public void setHighlighted(boolean on)
     {
         shape.changeSize(on ? 45 : 30);
     }
     
+    
     /**
-     * Mueve la figura del simbolo a una nueva posicion
-     * @param x Coordenada horizontal
-     * @param y cordenada vertical
+     * Moves the symbol to a new position.
+     *
+     * @param x the horizontal coordinate
+     * @param y the vertical coordinate
      */
-    public void setPosition(int x , int y){
-        shape.setPosition(x,y);
+    public void setPosition(int x, int y){
+        shape.setPosition(x, y);
     }
 }

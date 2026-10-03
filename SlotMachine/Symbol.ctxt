@@ -1,19 +1,20 @@
 #BlueJ class context
-#Fri Oct 02 18:10:59 COT 2026
+#Fri Oct 02 23:30:01 COT 2026
 comment0.target=Symbol
 comment0.text=\r\n Write a description of class Symbol here.\r\n\r\n @author (Juan Andr\u00E9s Rojas)\r\n @version (06/09/2026)\r\n
 comment1.params=color
 comment1.target=Symbol(java.lang.String)
-comment1.text=\r\n Constructor - Crea un s\u00EDmbolo con color y figura por defecto (c\u00EDrculo)\r\n @param color El color del s\u00EDmbolo\r\n
+comment1.text=\r\n Constructor for objects of class Symbol\r\n Create a symbol\r\n
 comment2.target=java.lang.String getColor()
-comment2.text=\r\n Devuelve el color del s\u00EDmbolo\r\n @return El color como String\r\n
+comment2.text=\r\n Returns the color of the symbol.\r\n\r\n @return the color as a String\r\n
 comment3.target=void makeVisible()
-comment3.text=\r\n Hace visible la figura geom\u00E9trica\r\n
+comment3.text=\r\n Makes the symbol visible.\r\n
 comment4.target=void makeInvisible()
-comment4.text=\r\n Hace invisible la figura geom\u00E9trica\r\n
+comment4.text=\r\n Makes the symbol invisible.\r\n
 comment5.params=on
 comment5.target=void setHighlighted(boolean)
+comment5.text=\r\n Highlights or unhighlights the symbol by changing the size of its shape.\r\n\r\n @param on true to enlarge the shape (45), false to return it to its normal size (30)\r\n
 comment6.params=x y
 comment6.target=void setPosition(int, int)
-comment6.text=\r\n Mueve la figura del simbolo a una nueva posicion\r\n @param x Coordenada horizontal\r\n @param y cordenada vertical\r\n
+comment6.text=\r\n Moves the symbol to a new position.\r\n\r\n @param x the horizontal coordinate\r\n @param y the vertical coordinate\r\n
 numComments=7

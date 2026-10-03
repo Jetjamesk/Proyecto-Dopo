@@ -35,7 +35,7 @@ public class SlotMachine
     }
     
     /**
-     * Crear the slot machine with an N wheels and sysmbols 
+     * Crear the slot machine with an N wheels and symbols 
      * @param n numebres of wheels and symbols of the slot machine
      */
         public SlotMachine(int n){
@@ -46,7 +46,7 @@ public class SlotMachine
             return;
         }
         ArrayList<String> colors = new ArrayList<String>();
-        String[] palette = {"red", "blue", "yellow", "green", "magenta", "white", "black"};
+        String[] palette = {"red", "blue", "yellow", "green", "magenta", "white", "black","gray"};
         for (int i = 0; i < palette.length && colors.size() < n; i++){
             colors.add(palette[i]);
         }
@@ -78,7 +78,7 @@ public class SlotMachine
 
     
     /**
-     * Añadir una reuda en la maquina 
+     * Add a wheel to the machine  
      *
      * @param pos 
      * @return void
@@ -93,7 +93,7 @@ public class SlotMachine
     }
     
     /**
-     * Al añadir una rueda verificamos en que posicion esta antes de todo
+     * When we add a wheel to the machine we need to verfy the position
      *
      * @param  pos and max 
      * @return int  
@@ -106,10 +106,10 @@ public class SlotMachine
     }
     
     /**
-     * Borrar una rueda de la maquina. Pero tenemso que verificar que al menos haya alguna rueda
-     * Si hay una rueda se puede eliminar. Si no pues no se realiza el metodo.
+     * Delete a wheel of the machine however we need to verfy the size of the wheels. If is 0 we can´t
+     * delete. But if is greater tahn 0 we can delete one wheel in that position
      *
-     * @param  Posición 
+     * @param  Position 
      * @return Void
      */
     public void delWheel(int pos)
@@ -135,11 +135,10 @@ public class SlotMachine
     
     /**
      * 
-     * Agregar un simbolo con un color y una figura (Triangulo,Rectangulo y Circulo)
+     * Add a symbol in the wheel with a color
      *
-     * @param  pos, color la posicion donde se le va a asignar y que color se le va a
-     * asignar
-     * @return void
+     * @param  pos, color The position that we will add the symbol and the color that we want
+     * 
      */
     public void addSymbol(int pos, String color){
         if (activeWheel == null){
@@ -152,9 +151,10 @@ public class SlotMachine
     }
 
     /**
-     * Buscar y eliminar un simbolo de cada rueda
-     * @param  symbol la figura 
-     * @return void
+     * Search and find the symbol that we want to delete in all the wheels
+     * 
+     * @param  symbol The symbol that we want to delete
+     * 
      */
     public void delSymbol(String symbol){
         if (activeWheel == null){
@@ -167,10 +167,10 @@ public class SlotMachine
     }
 
     /**
-     * Mostar de una rueda en especifico un simbolo con un cierto color 
+     * Show a specific wheel with a specific symbol color  
      *
-     * @param wheel, symbol la rueda que queremos ver y el simbolo que buscamos 
-     * @return void
+     * @param wheel, the wheel that we want and the symbol that we search 
+     * 
      */
     public void placeSymbol(int wheel, String symbol)
     {
@@ -186,9 +186,9 @@ public class SlotMachine
     }
     
     /**
-     * Hacer girar una sola rueda selecionada a la siguiente posicion
+     * Spin an specific wheel in a random position
      *
-     * @param wheel La rueda la cual vamos a girar
+     * @param wheel The wheel that we want to spin
      * @return void
      */
     public void spin(int wheel)
@@ -199,14 +199,20 @@ public class SlotMachine
             return;
         }
         int index = posicitionArrayList(wheel, wheels.size());
-        wheels.get(index - 1).spin();
+        Wheel target = wheels.get(index-1);
+        if (target.isLocked()){
+            ok = false;
+            return;
+        }
+        target.spin(random);
         ok = true;
         redraw();
     }
 
     /**
-     * Hacer girar todas las ruedas al mismo tiempo, de forma aleatoria.
-     * Las ruedas fijadas (locked) se ignoran y conservan su símbolo actual.
+     * Spin all the wheels at the same time in a random position
+     * the wheels that are locked we ignore
+     * 
      *
      * @return void
      */
@@ -231,12 +237,11 @@ public class SlotMachine
     }
     
     /**
-     * Devuelve una lista con todos los colores de la primera rueda en orden
+     * Return a list with all the colors of the wheel in orden 
      *
-     * @return String Devuelve un arreglo de la guinete forma symbols: Nombre 
+     * @return String Return a list with the colors  
      */
-    public String[] symbols()
-    {
+    public String[] symbols(){
         if (wheels.size() == 0)
         {
             return new String[0];
@@ -246,8 +251,9 @@ public class SlotMachine
     
     /**
      * Cuenta cuántos colores únicos y diferentes existen en total en toda la máquina
+     * Count how many colors are in the all machine
      * 
-     * @return int Un numeor entero con el total de distintos simbolos
+     * @return int The number of the colors
      */
     public int distinctSymbols(){
         if (activeWheel == null){
@@ -270,11 +276,11 @@ public class SlotMachine
     
      /**
      * Devuelve un arreglo con los colores visibles actuales de cada rueda de izquierda a derecha
+     * Return a arrangement with the all current colors visibles in the wheels from left to right
      * 
-     * @return String El nombre de la funcion del esatdo visual
+     * @return String The name of the funtion of the visual state
      */
-    public String[] configuration()
-    {
+    public String[] configuration(){
         String[] visibleColors = new String[wheels.size()];
         for (int i = 0; i < wheels.size(); i++)
         {
@@ -284,12 +290,11 @@ public class SlotMachine
     }
     
     /**
-     * Verifica si el jugador ganó si todas las ruedas muestran el mismo color.
+     * Verify if the player won. You won if the all wheels shows the same symbol with the same color 
      * 
-     * @return Boolean O verdadero o falso 
+     * @return Boolean True or false 
      */
-    public boolean isJackpot()
-    {   
+    public boolean isJackpot(){   
         if (wheels.size() == 0){
             return false;
         }
@@ -311,57 +316,53 @@ public class SlotMachine
     
     
     /**
-     * Muestra visualmente la interfaz de la máquina y sus ruedas.
+     * Show visually the machine with the wheels
      * 
      * @return void
      */
-    
-    public void makeVisible()
-    {
+    public void makeVisible(){
         visible = true;
         redraw();
     }
     
+    
     /**
-     * Oculta la interfaz de la máquina sin detener su funcionamiento interno.
+     * Hide the machine and the wheels without stopping the machine
      * 
      * @return void
      */
-
-    public void makeInvisible()
-    {
+    public void makeInvisible(){
         visible = false;
         redraw();
     }
     
+    
     /**
-     * Apaga o cierra la ventana de simulación del juego.
+     * Close the game and clear all the canvas 
      * 
      * @return void  
      */
-   
-    public void exit()
-    {
+    public void exit(){
         visible = false;
         redraw();
     }
     
+    
     /**
-     * Indica si la última acción realizada por el usuario se ejecutó correctamente.
+     * Indicate if the last action was done correctly.
      *
-     * @return true si la última operación fue válida, false en caso contrario
+     * @return true or false
      */
-    public boolean ok()
-    {
+    public boolean ok(){
         return ok;
     }
 
+    
     /**
-     * Intercambia la posición de dos ruedas dentro de la máquina.
-     * Requisito 9 (Extensión Ciclo 2): intercambiar dos ruedas.
+     * Swap the position of two wheels in the machine 
      *
-     * @param wheel1 posición de la primera rueda
-     * @param wheel2 posición de la segunda rueda
+     * @param wheel1 position of the first wheel
+     * @param wheel2 position of the second wheel
      * @return void
      */
     public void swap(int wheel1, int wheel2){
@@ -377,11 +378,11 @@ public class SlotMachine
         redraw();
     }
 
+    
     /**
-     * Fija (bloquea) una rueda para que no gire hasta que sea liberada con {@link #unlock(int)}.
-     * Requisito 10 (Extensión Ciclo 2): fijar y soltar una rueda.
+     * Lock the wheel so it can´t turn the wheel 
      *
-     * @param wheel posición de la rueda a fijar
+     * @param wheel Position of the wheel that we want to lock
      * @return void
      */
     public void lock(int wheel){
@@ -395,11 +396,11 @@ public class SlotMachine
         redraw();
     }
 
+    
     /**
-     * Suelta (desbloquea) una rueda previamente fijada, permitiendo que vuelva a girar.
-     * Requisito 10 (Extensión Ciclo 2): fijar y soltar una rueda.
+     * Unlock the wheel that we had locked
      *
-     * @param wheel posición de la rueda a soltar
+     * @param wheel Position of the wheel that we want to unlock
      * @return void
      */
     public void unlock(int wheel){
@@ -413,13 +414,14 @@ public class SlotMachine
         redraw();
     }
 
+    
     /**
-     * Deja la máquina en una configuración dada: cada posición del arreglo indica
-     * el símbolo (color) que debe quedar visible en la rueda correspondiente.
-     * Las ruedas fijadas (locked) no se modifican.
-     * Requisito 12 (Extensión Ciclo 2): dejar la máquina en una configuración dada.
+     * Sets the machine to a specific configuration: each position in the array indicates
+     * the symbol that should be visible on the corresponding wheel.
+     * Locked wheels are not changed.
+     * 
      *
-     * @param setSymbols arreglo con el símbolo deseado para cada rueda, de izquierda a derecha
+     * @param setSymbols Arrange the desired symbol for each wheel, from left to right
      * @return void
      */
     public void spin(String[] setSymbols){
@@ -437,14 +439,14 @@ public class SlotMachine
         redraw();
     }
 
+    
     /**
-     * Gira una rueda específica un número de pasos determinado. Si la máquina está
-     * visible, el movimiento se visualiza paso a paso (Requisito de usabilidad 1).
-     * Una rueda fijada (locked) no gira.
-     * Requisito 11 (Extensión Ciclo 2): rotar una rueda un número de pasos.
+     * Rotates a specific wheel a specified number of steps. If the machine is
+     * visible, the movement is displayed step by step 
+     * A locked wheel does not rotate.
      *
-     * @param wheel posición de la rueda a girar
-     * @param steps número de pasos a girar (positivo o negativo)
+     * @param wheel position of the wheel that we want to turn 
+     * @param steps number of steps to turn
      * @return void
      */
     public void spin(int wheel, int steps){
@@ -472,6 +474,7 @@ public class SlotMachine
         redraw();
     }
 
+    
     private void redraw(){
     if (!visible)
     {

@@ -36,39 +36,38 @@ public class SlotMachineContest extends SlotMachine{
         }
 
         String target = machine.configuration()[0];
-        for (int wheel = 2; wheel <= n; wheel++){
+        for (int i = 0; i < n - 1; i++){
             int steps = 0;
-            while (steps < n - 1 && !machine.configuration()[wheel - 1].equals(target)){
-                machine.spin(wheel, 1);
+            while (steps < n - 1 && !machine.configuration()[i + 1].equals(target)){
+                machine.spin(i + 2, 1);
                 steps++;
             }
             if (steps > 0){
-                actions.add(new int[]{wheel, steps});
+                actions.add(new int[]{i + 2, steps});
             }
         }
-
         return actions.toArray(new int[0][]);
     }
     
     
     public static void simulate(int n)
-    {
-        if (n < 1 || n > MAX_SIMULATION_SIZE){
-            return;
-        }
-        int[][] actions = solve(n);
-        for (int k = actions.length - 1; k >= 0; k--){
-            machine.spin(actions[k][0], n - actions[k][1]);
-        }
-        machine.makeVisible();
-        int k = 0;
-        while (k < actions.length){
-            int wheel = actions[k][0];
-            int total = 0;
-            while (k < actions.length && actions[k][0] == wheel){
-                total += actions[k][1];
-                k++;
-            }
+{
+    if (n < 1 || n > MAX_SIMULATION_SIZE){
+        return;
+    }
+    int[][] actions = solve(n);
+    for (int i = 0; i < actions.length; i++){
+        int k = actions.length - 1 - i;   // recorre de atrás hacia adelante
+        machine.spin(actions[k][0], n - actions[k][1]);
+    }
+    machine.makeVisible();
+
+    int total = 0;
+    for (int i = 0; i < actions.length; i++){
+        int wheel = actions[i][0];
+        total += actions[i][1];
+        boolean ultimaDeLaRueda = (i == actions.length - 1) || actions[i + 1][0] != wheel;
+        if (ultimaDeLaRueda){
             total = total % n;
             if (total > n / 2){
                 total = total - n;
@@ -76,6 +75,8 @@ public class SlotMachineContest extends SlotMachine{
             if (total != 0){
                 machine.spin(wheel, total);
             }
+            total = 0; 
         }
     }
+}
 }
