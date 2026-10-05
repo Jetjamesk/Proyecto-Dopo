@@ -9,8 +9,8 @@ import java.util.HashSet;
 /**
  * The test class SlotMachineContestTest.
  *
- * @author  (your name)
- * @version (a version number or a date)
+ * @author  (Juan Andrés Rojas)
+ * @version (Ciclo 3)
  */
 public class SlotMachineContestTest
 {
@@ -35,9 +35,6 @@ public class SlotMachineContestTest
         return symbols;
     }
     
-    // ---------------------------------------------------------------- SlotMachine(n)
-    // Note: SlotMachine only has the constructor SlotMachine(int n), which creates
-    // n wheels with n symbols each. These tests use a single size n.
     
     /**
      * Test case: the symbols of a wheel have different colors,
@@ -187,7 +184,6 @@ public class SlotMachineContestTest
         assertFalse(isVisible(new SlotMachine(3)));
     }
     
-    // ---------------------------------------------------------------- distinctSymbols()
     
     /**
      * Test case: distinctSymbols() counts all different symbols in the machine,
@@ -347,7 +343,6 @@ public class SlotMachineContestTest
         }
     }
     
-    // ---------------------------------------------------------------- simulate(n)
     
     /**
      * Test case: simulate does nothing if n is outside the limits.

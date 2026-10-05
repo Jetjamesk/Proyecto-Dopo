@@ -14,7 +14,7 @@ public class SlotMachineContestCTest
      * For each size, it returns valid {wheel, steps} actions within the 10,000 limit.
      */
     @Test
-    public void accordingXxYyShouldSolveWithValidActionsInsideTheLimit()
+    public void accordingJuanShouldSolveWithValidActionsInsideTheLimit()
     {
         for (int n = 2; n <= 8; n++)
         {
@@ -36,7 +36,7 @@ public class SlotMachineContestCTest
      * and the machine can be set to a jackpot.
      */
     @Test
-    public void accordingXxYyShouldKeepC2BehaviorOnAMachineOfNWheelsAndNSymbols()
+    public void accordingJuanShouldKeepC2BehaviorOnAMachineOfNWheelsAndNSymbols()
     {
         int n = 5;
         SlotMachine machine = new SlotMachine(n);

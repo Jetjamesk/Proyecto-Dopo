@@ -17,6 +17,7 @@ public class SlotMachine
     private Wheel activeWheel;
     private Random random;
     
+    
     private static final int MARGIN_LEFT = 40;
     private static final int WHEEL_SPACING = 60;
     private static final int STEP_DELAY_MS = 150;
@@ -33,6 +34,7 @@ public class SlotMachine
         activeWheel = null;
         random = new Random();
     }
+    
     
     /**
      * Crear the slot machine with an N wheels and symbols 
@@ -83,14 +85,30 @@ public class SlotMachine
      * @param pos 
      * @return void
      */
-    public void addWheel(int pos){
-     pos = posicitionArrayList(pos, wheels.size()+1);
-     Wheel newWheel = new Wheel();
-     wheels.add(pos-1, newWheel);
-     activeWheel = newWheel; 
-     ok = true;
-     redraw();
+        public void addWheel(int pos){
+        addWheel("normal", pos);
     }
+    
+    
+    /**
+     * Add a wheel of a given type to the machine
+     *
+     * @param type "normal", "lefty" or "rebel"
+     * @param pos position where the wheel is added
+     */
+        public void addWheel(String type, int pos){
+        Wheel newWheel = Wheel.create(type);
+        if (newWheel == null){
+            ok = false;
+            return;
+        }
+        pos = posicitionArrayList(pos, wheels.size()+1);
+        wheels.add(pos-1, newWheel);
+        activeWheel = newWheel; 
+        ok = true;
+        redraw();
+    }
+    
     
     /**
      * When we add a wheel to the machine we need to verfy the position
@@ -104,6 +122,7 @@ public class SlotMachine
         else if (pos> max) return max;
         else return pos;
     }
+    
     
     /**
      * Delete a wheel of the machine however we need to verfy the size of the wheels. If is 0 we can´t
@@ -119,6 +138,10 @@ public class SlotMachine
             return; 
         }
             pos = posicitionArrayList(pos, wheels.size());
+            if (!wheels.get(pos-1).canBeDeleted()){
+                ok = false;
+                return;
+            }
             Wheel remove = wheels.remove(pos-1);
             remove.makeInvisible();
             if (remove == activeWheel){
@@ -133,6 +156,7 @@ public class SlotMachine
         redraw();
     }
     
+    
     /**
      * 
      * Add a symbol in the wheel with a color
@@ -140,16 +164,28 @@ public class SlotMachine
      * @param  pos, color The position that we will add the symbol and the color that we want
      * 
      */
-    public void addSymbol(int pos, String color){
+        public void addSymbol(int pos, String color){
+        addSymbol("normal", pos, color);
+    }
+
+    
+    /**
+     * Add a symbol of a given type in the active wheel
+     *
+     * @param type "normal", "ephemeral", "shy" or "wild"
+     * @param pos position where the symbol is added
+     * @param color color of the symbol
+     */
+    public void addSymbol(String type, int pos, String color){
         if (activeWheel == null){
             ok = false;
             return;
         }
-        activeWheel.addSymbol(pos, color);
-        ok = true;
+        ok = activeWheel.addSymbol(type, pos, color);
         redraw();
     }
 
+    
     /**
      * Search and find the symbol that we want to delete in all the wheels
      * 
@@ -166,6 +202,7 @@ public class SlotMachine
         redraw();
     }
 
+    
     /**
      * Show a specific wheel with a specific symbol color  
      *
@@ -184,6 +221,7 @@ public class SlotMachine
         ok = true;
         redraw();
     }
+    
     
     /**
      * Spin an specific wheel in a random position
@@ -204,11 +242,13 @@ public class SlotMachine
             ok = false;
             return;
         }
+        linkWheels();
         target.spin(random);
         ok = true;
         redraw();
     }
 
+    
     /**
      * Spin all the wheels at the same time in a random position
      * the wheels that are locked we ignore
@@ -221,7 +261,9 @@ public class SlotMachine
             ok = false;
             return;
         }
-        for (Wheel wheel : wheels){
+        linkWheels();
+        for (int i = 0; i < wheels.size(); i++){
+            Wheel wheel = wheels.get(i);
             if (wheel.isLocked()){
                 continue;
             }
@@ -230,7 +272,6 @@ public class SlotMachine
                 int steps = random.nextInt(size);
                 wheel.spin(steps);
             }
-            
         }
         ok = true;
         redraw();
@@ -261,12 +302,12 @@ public class SlotMachine
             return 0;
         }
         ArrayList<String> distinct = new ArrayList<String>();
-        for (Wheel wheel : wheels)
-        {
-            for (String color : wheel.allSymbols())
-            {
-                if (!distinct.contains(color))
-                {
+        for (int i = 0; i < wheels.size(); i++){
+            Wheel wheel = wheels.get(i);
+            String[] colors = wheel.allSymbols();
+            for (int j = 0; j < colors.length; j++){
+                String color = colors[j];
+                if (!distinct.contains(color)){
                     distinct.add(color);
                 }
             }
@@ -298,16 +339,19 @@ public class SlotMachine
         if (wheels.size() == 0){
             return false;
         }
-        
-        String[] visibleColors = configuration();
-        if (visibleColors.length == 0 || visibleColors[0].isEmpty())
-        {
-            return false;
-        }
-        for (int i=0; i< visibleColors.length;i++)
-        {
-            String color = visibleColors[i];
-            if (color == null || !color.equals(visibleColors[0])){
+        String target = null;
+        for (int i = 0; i < wheels.size(); i++){
+            Wheel wheel = wheels.get(i);
+            String color = wheel.currentSymbol();
+            if (color.isEmpty()){
+                return false;
+            }
+            if (wheel.isCurrentWild()){
+                continue;
+            }
+            if (target == null){
+                target = color;
+            } else if (!color.equals(target)){
                 return false;
             }
         }
@@ -372,6 +416,10 @@ public class SlotMachine
         }
         int index1 = posicitionArrayList(wheel1, wheels.size()) - 1;
         int index2 = posicitionArrayList(wheel2, wheels.size()) - 1;
+        if (!wheels.get(index1).canBeSwapped() || !wheels.get(index2).canBeSwapped()){
+            ok = false;
+            return;
+        }
         Wheel temp = wheels.set(index1, wheels.get(index2));
         wheels.set(index2, temp);
         ok = true;
@@ -391,7 +439,12 @@ public class SlotMachine
             return;
         }
         int index = posicitionArrayList(wheel, wheels.size());
-        wheels.get(index - 1).lock();
+        Wheel target = wheels.get(index - 1);
+        if (!target.canBeLocked()){
+            ok = false;
+            return;
+        }
+        target.lock();
         ok = true;
         redraw();
     }
@@ -460,14 +513,17 @@ public class SlotMachine
             ok = false;
             return;
         }
-        if (visible){
+        linkWheels();
+        if (visible && target.animatesSteps()){
             int direction = steps < 0 ? -1 : 1;
-            int totalSteps = Math.abs(steps);
+            int totalSteps = Math.abs(steps); // We need that the total steps be positve so we use absolute value  
             for (int i = 0; i < totalSteps; i++){
-                target.spin(direction);
+                target.rotate(direction);
                 redraw();
             }
-        } else {
+            target.afterSpin();
+        } 
+        else {
             target.spin(steps);
         }
         ok = true;
@@ -475,22 +531,36 @@ public class SlotMachine
     }
 
     
-    private void redraw(){
-    if (!visible)
-    {
-        for (Wheel wheel : wheels)
-        {
-            wheel.makeInvisible();
+    /**
+     * Tells each wheel who is on its left (lefty wheels need it before spinning).
+     */
+    private void linkWheels(){
+        for (int i = 0; i < wheels.size(); i++){
+            if (i>0){
+                wheels.get(i).setLeft(wheels.get(i - 1));
+            }
+            else{
+                wheels.get(i).setLeft(null);
+            }
         }
-        return;
     }
-    boolean jackpot = isJackpot();
-    int x = MARGIN_LEFT;
-    for (Wheel wheel : wheels){
-        wheel.setHighlighted(jackpot);
-        wheel.reposition(x);
-        wheel.makeVisible();
-        x += WHEEL_SPACING;
+
+    
+    private void redraw(){
+        if (!visible){
+            for (int i = 0; i < wheels.size(); i++){
+                wheels.get(i).makeInvisible();
+            }
+            return;
+        }
+        boolean jackpot = isJackpot();
+        int x = MARGIN_LEFT;
+        for (int i = 0; i < wheels.size(); i++){
+            Wheel wheel = wheels.get(i);
+            wheel.setHighlighted(jackpot);
+            wheel.reposition(x);
+            wheel.makeVisible();
+            x += WHEEL_SPACING;
         }
     }
 }

@@ -1,5 +1,5 @@
 #BlueJ class context
-#Fri Oct 02 23:30:19 COT 2026
+#Sun Oct 04 21:41:15 COT 2026
 comment0.target=SlotMachineC2Test
 comment0.text=\r\n Pruebas del Ciclo 2 de SlotMachine.\r\n Todas las pruebas se ejecutan en modo invisible\r\n\r\n @author (Juan Andr\u00E9s Rojas Molina)\r\n @version (Ciclo 2)\r\n
 comment1.target=void setUp()
